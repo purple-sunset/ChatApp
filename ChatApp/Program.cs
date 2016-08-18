@@ -15,13 +15,10 @@ namespace ChatApp
         static void Main()
         {
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            DIContainer.SetModule<ISender, SocketSender>();
-            DIContainer.SetModule<IReceiver, SocketReceiver>();
+            Application.SetCompatibleTextRenderingDefault(false);           
             DIContainer.SetModule<IAsyncSender, AsyncSockerSender>();
             DIContainer.SetModule<IAsyncReceiver, AsyncSocketReceiver>();
-            DIContainer.SetModule<AsyncChatWindow, AsyncChatWindow>();
-            DIContainer.SetModule<ChatWindow, ChatWindow>();
+            DIContainer.SetModule<AsyncChatWindow, AsyncChatWindow>();            
             var chatWindow = DIContainer.GetModule<AsyncChatWindow>();
             Application.Run(chatWindow);
         }

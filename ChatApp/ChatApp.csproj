@@ -62,7 +62,6 @@
     </Compile>
     <Compile Include="DIContainer.cs" />
     <Compile Include="IAsyncReceiver.cs" />
-    <Compile Include="IChat.cs" />
     <Compile Include="IAsyncSender.cs" />
     <Compile Include="IReceiver.cs" />
     <Compile Include="ISender.cs" />
@@ -76,8 +75,6 @@
     </Compile>
     <Compile Include="SocketReceiver.cs" />
     <Compile Include="SocketSender.cs" />
-    <Compile Include="StateObject.cs" />
-    <Compile Include="UDPChat.cs" />
     <Compile Include="UDPReceiver.cs" />
     <Compile Include="UDPSender.cs" />
     <EmbeddedResource Include="AsyncChatWindow.resx">

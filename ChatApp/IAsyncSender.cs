@@ -13,11 +13,10 @@ namespace ChatApp
         int Port { get; set; }
         IPAddress Address { get; set; }
         IPEndPoint SendEndPoint { get; set; }
+
         void Init(object o);
         void Connect();
-        void ConnectCallback(IAsyncResult ar);
         bool Send(string s);
-        void SendCallback(IAsyncResult ar);
         void Close();
     }
 }

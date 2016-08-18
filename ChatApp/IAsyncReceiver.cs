@@ -17,9 +17,7 @@ namespace ChatApp
         
         void Init(object o);
         void Accept();
-        void AcceptCallback(IAsyncResult ar);
         void Receive(Socket client);
-        void ReceiveCallback(IAsyncResult ar);
         void Close();
     }
 }

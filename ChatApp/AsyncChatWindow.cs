@@ -44,14 +44,12 @@ namespace ChatApp
                     this.Show();
                     ThreadPool.QueueUserWorkItem(_sender.Init, this);
                     ThreadPool.QueueUserWorkItem(_receiver.Init, this);
-
                 }
                 catch (Exception)
                 {
                     Console.WriteLine("Exception");
                     this.Close();
                 }
-
             }
         }
 
@@ -79,9 +77,7 @@ namespace ChatApp
                     textConv.AppendText(text + "\n");
                     textSend.ResetText();
                 }
-
             }
-
         }
 
         public void Receive(string s)

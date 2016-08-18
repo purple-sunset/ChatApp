@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ChatApp
 {
-    class UDPReceiver : IReceiver
+    class UDPReceiver
     {
         public IPAddress Address { get; set; }
 

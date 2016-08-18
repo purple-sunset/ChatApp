@@ -10,6 +10,7 @@ namespace ChatApp
     {
         private static readonly Dictionary<Type, object>
             RegisteredModules = new Dictionary<Type, object>();
+
         public static void SetModule<TInterface, TModule>()
         {
             SetModule(typeof(TInterface), typeof(TModule));
@@ -41,8 +42,7 @@ namespace ChatApp
                     var dependency = GetModule(parameter.ParameterType);
                     moduleDependencies.Add(dependency);
                 }
-                module = firstConstructor.Invoke(moduleDependencies.ToArray());
-                
+                module = firstConstructor.Invoke(moduleDependencies.ToArray());              
             }
             RegisteredModules.Add(interfaceType, module);
         }

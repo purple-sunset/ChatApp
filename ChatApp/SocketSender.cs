@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ChatApp
 {
-    class SocketSender : ISender
+    class SocketSender
     {
         public IPAddress Address { get; set; }
         public int Port { get; set; }

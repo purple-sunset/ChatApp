@@ -15,7 +15,7 @@ namespace ChatApp
         IPEndPoint ReceiveEndPoint { get; set; }
         Thread ReceivingThread { get; set; }
 
-        void Init(ChatWindow cw);
+        void Init(object o);
         void Receive();
         void Close();
     }

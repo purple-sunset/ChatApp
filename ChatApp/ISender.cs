@@ -13,7 +13,9 @@ namespace ChatApp
         int Port { get; set; }
         IPAddress Address { get; set; }
         IPEndPoint SendEndPoint { get; set; }
-        void Init();
+
+        void Init(object o);
+        void Connect();
         bool Send(string s);
         void Close();
     }

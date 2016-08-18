@@ -39,7 +39,7 @@ namespace ChatApp
                     textConv.SelectionAlignment = HorizontalAlignment.Center;
                     textConv.AppendText(myAddress + " đã đăng nhập! \n");
                     this.Show();
-                    _sender.Init();
+                    _sender.Init(this);
                     _receiver.Init(this);
                 }
                 catch (Exception)
@@ -47,7 +47,6 @@ namespace ChatApp
                     Console.WriteLine("Exception");
                     this.Close();
                 }
-
             }
         }
 

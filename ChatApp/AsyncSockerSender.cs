@@ -13,22 +13,16 @@ namespace ChatApp
     {
         public IPAddress Address { get; set; }
 
-
         public int Port { get; set; }
-
 
         public IPEndPoint SendEndPoint { get; set; }
 
         private bool isSended;
         private Socket client;
-
         private AsyncChatWindow cw;
+        private ManualResetEvent connectDone = new ManualResetEvent(false);
+        private ManualResetEvent sendDone = new ManualResetEvent(false);
 
-        private ManualResetEvent connectDone =
-        new ManualResetEvent(false);
-
-        private ManualResetEvent sendDone =
-        new ManualResetEvent(false);
         public void Init(object o)
         {
             this.cw = (AsyncChatWindow)o;
@@ -41,7 +35,6 @@ namespace ChatApp
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             while (true)
             {
-                
                 if (!socket.Connected)
                 {
                     try
@@ -59,10 +52,9 @@ namespace ChatApp
                 {
                     socket.Disconnect(true);
                 }
-            }
-            
+            }         
         }
-        public void ConnectCallback(IAsyncResult ar)
+        private void ConnectCallback(IAsyncResult ar)
         {
             client = (Socket)ar.AsyncState;
             try
@@ -96,20 +88,17 @@ namespace ChatApp
                 {
                     sendDone.Reset();
                     client.BeginSend(data, 0, data.Length, 0, new AsyncCallback(SendCallback), client);
-                    sendDone.WaitOne(5000);
+                    sendDone.WaitOne(1000);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.ToString());
-                    
-                }
-                
+                    Console.WriteLine(e.ToString());                    
+                }                
             }
-            return isSended;
-            
+            return isSended;            
         }
 
-        public void SendCallback(IAsyncResult ar)
+        private void SendCallback(IAsyncResult ar)
         {
             try
             {

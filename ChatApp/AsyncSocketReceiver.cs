@@ -13,18 +13,16 @@ namespace ChatApp
     {
         public IPAddress Address { get; set; }
 
-
         public int Port { get; set; }
 
         public IPEndPoint ReceiveEndPoint { get; set; }
+
         private Socket server;
         private byte[] data = new byte[1024];
         private AsyncChatWindow cw;
-        private ManualResetEvent acceptDone =
-        new ManualResetEvent(false);
+        private ManualResetEvent acceptDone = new ManualResetEvent(false);
+        private ManualResetEvent receiveDone = new ManualResetEvent(false);
 
-        private ManualResetEvent receiveDone =
-        new ManualResetEvent(false);
         public void Init(object o)
         {
             ReceiveEndPoint = new IPEndPoint(Address, Port);
@@ -67,7 +65,7 @@ namespace ChatApp
         }
 
 
-        public void AcceptCallback(IAsyncResult ar)
+        private void AcceptCallback(IAsyncResult ar)
         {
             try
             {
@@ -94,7 +92,7 @@ namespace ChatApp
             }
         }
 
-        public void ReceiveCallback(IAsyncResult ar)
+        private void ReceiveCallback(IAsyncResult ar)
         {
             try
             {
@@ -110,11 +108,8 @@ namespace ChatApp
                         cw.DisableConnect();
                         cw.DisableSend();
                     }
-
                     receiveDone.Set();
                 }
-
-
             }
             catch (Exception e)
             {
