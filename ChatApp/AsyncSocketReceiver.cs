@@ -106,7 +106,7 @@ namespace ChatApp
                     string message = Encoding.UTF8.GetString(data, 0, byteReceived);
                     if (message != null)
                         cw.Receive(message);
-                    if (message == "Disconnect")
+                    if (message == "Disconnected")
                     {
                         cw.DisableConnect();
                         cw.DisableSend();

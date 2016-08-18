@@ -44,7 +44,7 @@ namespace ChatApp
                     this.Show();
                     ThreadPool.QueueUserWorkItem(_sender.Init, this);
                     ThreadPool.QueueUserWorkItem(_receiver.Init, this);
-                    
+
                 }
                 catch (Exception)
                 {
@@ -72,8 +72,7 @@ namespace ChatApp
         {
             if (textSend.Text.Trim() != "")
             {
-                _sender.Send(textSend.Text);
-                if (_sender.ByteSended > 0)
+                if (_sender.Send(textSend.Text))
                 {
                     var text = textSend.Text + " < " + myAddress;
                     textConv.SelectionAlignment = HorizontalAlignment.Right;
@@ -117,7 +116,7 @@ namespace ChatApp
             {
                 this.btnSend.Enabled = true;
             }
-            
+
         }
 
         public void DisableSend()

@@ -19,9 +19,7 @@ namespace ChatApp
 
         public IPEndPoint SendEndPoint { get; set; }
 
-        public bool IsSended { get; set; }
-        public int ByteSended { get; set; }
-
+        private bool isSended;
         private Socket client;
 
         private AsyncChatWindow cw;
@@ -88,8 +86,9 @@ namespace ChatApp
             }
         }
 
-        public void Send(string s)
+        public bool Send(string s)
         {
+            isSended = false;
             if (client.Connected)
             {
                 byte[] data = Encoding.UTF8.GetBytes(s);
@@ -106,6 +105,7 @@ namespace ChatApp
                 }
                 
             }
+            return isSended;
             
         }
 
@@ -114,7 +114,11 @@ namespace ChatApp
             try
             {
                 Socket remote = (Socket)ar.AsyncState;
-                ByteSended = remote.EndSend(ar);
+                var byteSended = remote.EndSend(ar);
+                if (byteSended > 0)
+                {
+                    isSended = true;
+                }
                 sendDone.Set();
             }
             catch (Exception e)
@@ -127,7 +131,7 @@ namespace ChatApp
         {
             try
             {
-                Send("Disconnect");
+                Send("Disconnected");
                 client.Close();
             }
             catch (Exception e)
