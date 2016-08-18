@@ -17,7 +17,6 @@ namespace ChatApp
         public int Port { get; set; }
 
         public IPEndPoint ReceiveEndPoint { get; set; }
-        public Thread ReceivingThread { get; set; }
         private Socket server;
         private byte[] data = new byte[1024];
         private AsyncChatWindow cw;

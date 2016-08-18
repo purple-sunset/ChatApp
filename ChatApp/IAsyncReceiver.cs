@@ -14,7 +14,6 @@ namespace ChatApp
         int Port { get; set; }
         IPAddress Address { get; set; }
         IPEndPoint ReceiveEndPoint { get; set; }
-        Thread ReceivingThread { get; set; }
         
         void Init(object o);
         void Accept();
