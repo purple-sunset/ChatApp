@@ -43,7 +43,7 @@ namespace ChatApp
             }
         }
 
-        private void Accept()
+        public void Accept()
         {
             while (true)
             {

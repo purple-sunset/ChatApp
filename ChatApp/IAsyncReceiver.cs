@@ -17,6 +17,7 @@ namespace ChatApp
         Thread ReceivingThread { get; set; }
         
         void Init(object o);
+        void Accept();
         void AcceptCallback(IAsyncResult ar);
         void Receive(Socket client);
         void ReceiveCallback(IAsyncResult ar);

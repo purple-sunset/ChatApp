@@ -36,7 +36,7 @@ namespace ChatApp
             Connect();
         }
 
-        private void Connect()
+        public void Connect()
         {
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             while (true)
