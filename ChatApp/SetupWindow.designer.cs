@@ -42,7 +42,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(30, 29);
+            this.label1.Location = new System.Drawing.Point(28, 38);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(40, 13);
             this.label1.TabIndex = 0;
@@ -50,23 +50,23 @@
             // 
             // textMyAddress
             // 
-            this.textMyAddress.Location = new System.Drawing.Point(109, 26);
+            this.textMyAddress.Location = new System.Drawing.Point(107, 34);
             this.textMyAddress.Name = "textMyAddress";
-            this.textMyAddress.Size = new System.Drawing.Size(216, 20);
+            this.textMyAddress.Size = new System.Drawing.Size(154, 20);
             this.textMyAddress.TabIndex = 1;
             // 
             // textFriendAddress
             // 
-            this.textFriendAddress.Location = new System.Drawing.Point(109, 80);
+            this.textFriendAddress.Location = new System.Drawing.Point(107, 87);
             this.textFriendAddress.Name = "textFriendAddress";
-            this.textFriendAddress.Size = new System.Drawing.Size(216, 20);
+            this.textFriendAddress.Size = new System.Drawing.Size(154, 20);
             this.textFriendAddress.TabIndex = 3;
             this.textFriendAddress.Text = "169.254.80.80";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(30, 83);
+            this.label2.Location = new System.Drawing.Point(28, 91);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(39, 13);
             this.label2.TabIndex = 2;
@@ -74,16 +74,16 @@
             // 
             // textSendPort
             // 
-            this.textSendPort.Location = new System.Drawing.Point(109, 139);
+            this.textSendPort.Location = new System.Drawing.Point(383, 34);
             this.textSendPort.Name = "textSendPort";
-            this.textSendPort.Size = new System.Drawing.Size(216, 20);
+            this.textSendPort.Size = new System.Drawing.Size(78, 20);
             this.textSendPort.TabIndex = 5;
             this.textSendPort.Text = "54595";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(30, 142);
+            this.label3.Location = new System.Drawing.Point(304, 38);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(45, 13);
             this.label3.TabIndex = 4;
@@ -91,16 +91,16 @@
             // 
             // textReceivePort
             // 
-            this.textReceivePort.Location = new System.Drawing.Point(109, 192);
+            this.textReceivePort.Location = new System.Drawing.Point(383, 87);
             this.textReceivePort.Name = "textReceivePort";
-            this.textReceivePort.Size = new System.Drawing.Size(216, 20);
+            this.textReceivePort.Size = new System.Drawing.Size(78, 20);
             this.textReceivePort.TabIndex = 7;
             this.textReceivePort.Text = "54595";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(30, 195);
+            this.label4.Location = new System.Drawing.Point(304, 91);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(55, 13);
             this.label4.TabIndex = 6;
@@ -108,7 +108,7 @@
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(343, 256);
+            this.btnOK.Location = new System.Drawing.Point(196, 161);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(111, 45);
             this.btnOK.TabIndex = 8;
@@ -120,7 +120,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(498, 320);
+            this.ClientSize = new System.Drawing.Size(498, 250);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.textReceivePort);
             this.Controls.Add(this.label4);
