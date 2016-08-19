@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChatApp
 {
-    class DIContainer
+    public class DIContainer
     {
         private static readonly Dictionary<Type, object>
             RegisteredModules = new Dictionary<Type, object>();
