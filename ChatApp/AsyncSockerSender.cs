@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ChatApp
 {
-    class AsyncSockerSender : IAsyncSender
+    class AsyncSockerSender : ISender
     {
         public IPAddress Address { get; set; }
 
@@ -17,15 +14,15 @@ namespace ChatApp
 
         public IPEndPoint SendEndPoint { get; set; }
 
-        private bool isSended;
-        private Socket client;
-        private AsyncChatWindow cw;
-        private ManualResetEvent connectDone = new ManualResetEvent(false);
-        private ManualResetEvent sendDone = new ManualResetEvent(false);
+        private bool _isSended;
+        private Socket _client;
+        private ChatWindow _cw;
+        private readonly ManualResetEvent _connectDone = new ManualResetEvent(false);
+        private readonly ManualResetEvent _sendDone = new ManualResetEvent(false);
 
         public void Init(object o)
         {
-            this.cw = (AsyncChatWindow)o;
+            _cw = (ChatWindow)o;
             SendEndPoint = new IPEndPoint(Address, Port);
             Connect();
         }
@@ -39,16 +36,16 @@ namespace ChatApp
                 {
                     try
                     {
-                        connectDone.Reset();
-                        socket.BeginConnect(SendEndPoint, new AsyncCallback(ConnectCallback), socket);
-                        connectDone.WaitOne(5000);
+                        _connectDone.Reset();
+                        socket.BeginConnect(SendEndPoint, ConnectCallback, socket);
+                        _connectDone.WaitOne(5000);
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e.ToString());
                     } 
                 }
-                if ((!cw.IsConnected) && (socket.Connected))
+                if ((!_cw.IsConnected) && (socket.Connected))
                 {
                     socket.Disconnect(true);
                 }
@@ -56,21 +53,21 @@ namespace ChatApp
         }
         private void ConnectCallback(IAsyncResult ar)
         {
-            client = (Socket)ar.AsyncState;
+            _client = (Socket)ar.AsyncState;
             try
             {
-                client.EndConnect(ar);
-                if(client.Connected)
+                _client.EndConnect(ar);
+                if(_client.Connected)
                 {
-                    cw.EnableConnect();
-                    cw.EnableSend();
+                    _cw.EnableConnect();
+                    _cw.EnableSend();
                 }
                 else
                 {
-                    cw.DisableConnect();
-                    cw.DisableSend();
+                    _cw.DisableConnect();
+                    _cw.DisableSend();
                 }
-                connectDone.Set();
+                _connectDone.Set();
             }
             catch (Exception e)
             {
@@ -80,22 +77,22 @@ namespace ChatApp
 
         public bool Send(string s)
         {
-            isSended = false;
-            if (client.Connected)
+            _isSended = false;
+            if (_client.Connected)
             {
                 byte[] data = Encoding.UTF8.GetBytes(s);
                 try
                 {
-                    sendDone.Reset();
-                    client.BeginSend(data, 0, data.Length, 0, new AsyncCallback(SendCallback), client);
-                    sendDone.WaitOne(1000);
+                    _sendDone.Reset();
+                    _client.BeginSend(data, 0, data.Length, 0, SendCallback, _client);
+                    _sendDone.WaitOne(1000);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e.ToString());                    
                 }                
             }
-            return isSended;            
+            return _isSended;            
         }
 
         private void SendCallback(IAsyncResult ar)
@@ -106,9 +103,9 @@ namespace ChatApp
                 var byteSended = remote.EndSend(ar);
                 if (byteSended > 0)
                 {
-                    isSended = true;
+                    _isSended = true;
                 }
-                sendDone.Set();
+                _sendDone.Set();
             }
             catch (Exception e)
             {
@@ -121,7 +118,7 @@ namespace ChatApp
             try
             {
                 Send("Disconnected");
-                client.Close();
+                _client.Close();
             }
             catch (Exception e)
             {

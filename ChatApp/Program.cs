@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ChatApp
@@ -16,10 +13,10 @@ namespace ChatApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);           
-            DIContainer.SetModule<IAsyncSender, AsyncSockerSender>();
-            DIContainer.SetModule<IAsyncReceiver, AsyncSocketReceiver>();
-            DIContainer.SetModule<AsyncChatWindow, AsyncChatWindow>();            
-            var chatWindow = DIContainer.GetModule<AsyncChatWindow>();
+            DIContainer.SetModule<ISender, AsyncSockerSender>();
+            DIContainer.SetModule<IReceiver, AsyncSocketReceiver>();
+            DIContainer.SetModule<ChatWindow, ChatWindow>();            
+            var chatWindow = DIContainer.GetModule<ChatWindow>();
             Application.Run(chatWindow);
         }
     }

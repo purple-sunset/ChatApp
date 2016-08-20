@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ChatApp
 {
-    class UDPSender
+    class UDPSender:ISender
     {
         public IPAddress Address { get; set; }
 
@@ -16,21 +12,26 @@ namespace ChatApp
 
         public IPEndPoint SendEndPoint { get; set; }
 
-        private UdpClient client;
+        private UdpClient _client;
 
-        public void Init()
+        public void Init(object o)
         {
-            client = new UdpClient(Port);
+            _client = new UdpClient(Port);
             SendEndPoint = new IPEndPoint(Address, Port);
-            client.Connect(SendEndPoint);
+            _client.Connect(SendEndPoint);
+        }
+
+        public void Connect()
+        {
+            
         }
 
         public bool Send(string s)
         {
-            if (client.Client.Connected)
+            if (_client.Client.Connected)
             {
                 byte[] data = Encoding.UTF8.GetBytes(s);
-                if (client.Send(data, data.Length) > 0)
+                if (_client.Send(data, data.Length) > 0)
                     return true;
             }
             return false;
@@ -38,9 +39,9 @@ namespace ChatApp
 
         public void Close()
         {
-            if (client!=null)
+            if (_client!=null)
             {
-                client.Close(); 
+                _client.Close(); 
             }
         }
     }

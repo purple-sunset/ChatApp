@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChatApp
 {
@@ -28,7 +26,7 @@ namespace ChatApp
                 throw new Exception("Wrong Module Type");
             }
             var firstConstructor = moduleType.GetConstructors()[0];
-            object module = null;
+            object module;
             if (!firstConstructor.GetParameters().Any())
             {
                 module = firstConstructor.Invoke(null);

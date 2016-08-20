@@ -48,12 +48,6 @@
   <ItemGroup>
     <Compile Include="AsyncSockerSender.cs" />
     <Compile Include="AsyncSocketReceiver.cs" />
-    <Compile Include="AsyncChatWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AsyncChatWindow.designer.cs">
-      <DependentUpon>AsyncChatWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="ChatWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -61,8 +55,6 @@
       <DependentUpon>ChatWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="DIContainer.cs" />
-    <Compile Include="IAsyncReceiver.cs" />
-    <Compile Include="IAsyncSender.cs" />
     <Compile Include="IReceiver.cs" />
     <Compile Include="ISender.cs" />
     <Compile Include="Program.cs" />
@@ -77,9 +69,6 @@
     <Compile Include="SocketSender.cs" />
     <Compile Include="UDPReceiver.cs" />
     <Compile Include="UDPSender.cs" />
-    <EmbeddedResource Include="AsyncChatWindow.resx">
-      <DependentUpon>AsyncChatWindow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ChatWindow.resx">
       <DependentUpon>ChatWindow.cs</DependentUpon>
     </EmbeddedResource>

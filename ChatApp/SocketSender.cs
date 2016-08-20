@@ -5,20 +5,20 @@ using System.Text;
 
 namespace ChatApp
 {
-    class SocketSender
+    class SocketSender:ISender
     {
         public IPAddress Address { get; set; }
         public int Port { get; set; }
         public IPEndPoint SendEndPoint { get; set; }
 
-        private Socket socket;
+        private Socket _socket;
 
-        public void Init()
+        public void Init(object o)
         {
             try
             {
                 SendEndPoint = new IPEndPoint(Address, Port);
-                socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             }
             catch (Exception e)
@@ -27,18 +27,23 @@ namespace ChatApp
             }
         }
 
+        public void Connect()
+        {
+            
+        }
+
         public bool Send(string s)
         {
             try
             {
-                if (!socket.Connected)
+                if (!_socket.Connected)
                 {
-                    socket.Connect(SendEndPoint);
+                    _socket.Connect(SendEndPoint);
                 }
-                if(socket.Connected)
+                if(_socket.Connected)
                 {
                     byte[] data = Encoding.UTF8.GetBytes(s + "\n");
-                    int byteSended = socket.Send(data);
+                    int byteSended = _socket.Send(data);
                     if (byteSended > 0)
                         return true;
                 }
@@ -65,7 +70,7 @@ namespace ChatApp
         {
             try
             {
-                socket.Close();
+                _socket.Close();
 
             }
             catch (Exception e)

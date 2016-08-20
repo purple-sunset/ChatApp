@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ChatApp
 {
-    class UDPReceiver
+    class UDPReceiver:IReceiver
     {
         public IPAddress Address { get; set; }
 
@@ -19,34 +15,38 @@ namespace ChatApp
 
         public Thread ReceivingThread { get; set; }
 
-        private UdpClient client;
-        private ChatWindow cw;
-        public void Init(ChatWindow cw)
+        private UdpClient _client;
+        private ChatWindow _cw;
+        public void Init(object o)
         {
-            client = new UdpClient(Port);
+            _client = new UdpClient(Port);
             ReceiveEndPoint = new IPEndPoint(Address, Port);
-            this.cw = cw;
+            _cw = (ChatWindow) o;
             ReceivingThread = new Thread(Receive);
             ReceivingThread.IsBackground = true;
             ReceivingThread.Start();
         }
 
-        public void Receive()
+        public void Accept()
+        {
+        }
+        
+        public void Receive(object o)
         {
             var endPoint = ReceiveEndPoint;
-            while (client.Client.Connected)
+            while (_client.Client.Connected)
             {
-                byte[] data = client.Receive(ref endPoint);
+                byte[] data = _client.Receive(ref endPoint);
                 string message = Encoding.UTF8.GetString(data);
-                cw.Receive(message);
+                _cw.Receive(message);
             }
         }
 
         public void Close()
         {
-            if (client != null)
+            if (_client != null)
             {
-                client.Close(); 
+                _client.Close(); 
             }
         }
 

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -11,20 +9,23 @@ namespace ChatApp
     {
         private readonly ISender _sender;
         private readonly IReceiver _receiver;
-        private string myAddress;
-        private string friendAddress;
+        private string _myAddress;
+        private string _friendAddress;
+        public bool IsConnected { get; set; }
         delegate void SetTextCallback(string text);
+        delegate void SetButtonCallback();
+        delegate void SetConnectCallback();
         public ChatWindow(ISender sender, IReceiver receiver)
         {
             InitializeComponent();
-            this.Load += new EventHandler(Start);
-            this._sender = sender;
-            this._receiver = receiver;
+            Load += Start;
+            _sender = sender;
+            _receiver = receiver;
         }
 
         public void Start(object sender, EventArgs e)
         {
-            this.Hide();
+            Hide();
             using (SetupWindow sw = new SetupWindow())
             {
                 sw.ShowDialog();
@@ -34,18 +35,18 @@ namespace ChatApp
                     _sender.Port = Int32.Parse(sw.SendPort);
                     _receiver.Address = IPAddress.Parse(sw.MyAddress);
                     _receiver.Port = Int32.Parse(sw.ReceivePort);
-                    myAddress = sw.MyAddress;
-                    friendAddress = sw.FriendAddress;
+                    _myAddress = sw.MyAddress;
+                    _friendAddress = sw.FriendAddress;
                     textConv.SelectionAlignment = HorizontalAlignment.Center;
-                    textConv.AppendText(myAddress + " đã đăng nhập! \n");
-                    this.Show();
-                    _sender.Init(this);
-                    _receiver.Init(this);
+                    textConv.AppendText(_myAddress + " đã đăng nhập! \n");
+                    Show();
+                    ThreadPool.QueueUserWorkItem(_sender.Init, this);
+                    ThreadPool.QueueUserWorkItem(_receiver.Init, this);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Exception");
-                    this.Close();
+                    Console.WriteLine(ex.ToString());
+                    Close();
                 }
             }
         }
@@ -69,28 +70,26 @@ namespace ChatApp
             {
                 if (_sender.Send(textSend.Text))
                 {
-                    var text = textSend.Text + " < " + myAddress;
+                    var text = textSend.Text + " < " + _myAddress;
                     textConv.SelectionAlignment = HorizontalAlignment.Right;
                     textConv.AppendText(text + "\n");
                     textSend.ResetText();
                 }
-                
             }
-
         }
 
         public void Receive(string s)
         {
-            var text = friendAddress + " > " + s;
-            if (this.textConv.InvokeRequired)
+            var text = _friendAddress + " > " + s;
+            if (textConv.InvokeRequired)
             {
-                SetTextCallback d = new SetTextCallback(Receive);
-                this.Invoke(d, new object[] { s });
+                SetTextCallback d = Receive;
+                Invoke(d, new object[] { s });
             }
             else
             {
-                this.textConv.SelectionAlignment = HorizontalAlignment.Left;
-                this.textConv.AppendText(text + "\n");
+                textConv.SelectionAlignment = HorizontalAlignment.Left;
+                textConv.AppendText(text + "\n");
             }
         }
 
@@ -98,6 +97,60 @@ namespace ChatApp
         {
             _sender.Close();
             _receiver.Close();
+        }
+
+        public void EnableSend()
+        {
+            if (btnSend.InvokeRequired)
+            {
+                SetButtonCallback d = EnableSend;
+                Invoke(d);
+            }
+            else
+            {
+                btnSend.Enabled = true;
+            }
+
+        }
+
+        public void DisableSend()
+        {
+            if (btnSend.InvokeRequired)
+            {
+                SetButtonCallback d = DisableSend;
+                Invoke(d);
+            }
+            else
+            {
+                btnSend.Enabled = false;
+            }
+
+        }
+
+        public void EnableConnect()
+        {
+            if (btnSend.InvokeRequired)
+            {
+                SetConnectCallback d = EnableConnect;
+                Invoke(d);
+            }
+            else
+            {
+                IsConnected = true;
+            }
+        }
+
+        public void DisableConnect()
+        {
+            if (btnSend.InvokeRequired)
+            {
+                SetConnectCallback d = DisableConnect;
+                Invoke(d);
+            }
+            else
+            {
+                IsConnected = false;
+            }
         }
     }
 }

@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ChatApp
 {
-    class AsyncSocketReceiver : IAsyncReceiver
+    class AsyncSocketReceiver : IReceiver
     {
         public IPAddress Address { get; set; }
 
@@ -17,21 +14,21 @@ namespace ChatApp
 
         public IPEndPoint ReceiveEndPoint { get; set; }
 
-        private Socket server;
-        private byte[] data = new byte[1024];
-        private AsyncChatWindow cw;
-        private ManualResetEvent acceptDone = new ManualResetEvent(false);
-        private ManualResetEvent receiveDone = new ManualResetEvent(false);
+        private Socket _server;
+        private readonly byte[] _data = new byte[1024];
+        private ChatWindow _cw;
+        private readonly ManualResetEvent _acceptDone = new ManualResetEvent(false);
+        private readonly ManualResetEvent _receiveDone = new ManualResetEvent(false);
 
         public void Init(object o)
         {
             ReceiveEndPoint = new IPEndPoint(Address, Port);
-            server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            this.cw = (AsyncChatWindow)o;
+            _server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _cw = (ChatWindow)o;
             try
             {
-                server.Bind(ReceiveEndPoint);
-                server.Listen(100);
+                _server.Bind(ReceiveEndPoint);
+                _server.Listen(100);
                 Accept();
             }
             catch (Exception e)
@@ -44,22 +41,22 @@ namespace ChatApp
         {
             while (true)
             {
-                if (!server.Connected)
+                if (!_server.Connected)
                 {
                     try
                     {
-                        acceptDone.Reset();
-                        server.BeginAccept(new AsyncCallback(AcceptCallback), server);
-                        acceptDone.WaitOne(5000);
+                        _acceptDone.Reset();
+                        _server.BeginAccept(AcceptCallback, _server);
+                        _acceptDone.WaitOne(5000);
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e.ToString());
                     }
                 }
-                if ((!cw.IsConnected) && (server.Connected))
+                if ((!_cw.IsConnected) && (_server.Connected))
                 {
-                    server.Disconnect(true);
+                    _server.Disconnect(true);
                 }
             }
         }
@@ -71,7 +68,7 @@ namespace ChatApp
             {
                 Socket oldServer = (Socket)ar.AsyncState;
                 Socket client = oldServer.EndAccept(ar);
-                acceptDone.Set();
+                _acceptDone.Set();
                 Receive(client);
                 
             }
@@ -82,13 +79,14 @@ namespace ChatApp
         }
 
 
-        public void Receive(Socket client)
+        public void Receive(object o)
         {
+            Socket client = (Socket) o;
             while (client.Connected)
             {
-                receiveDone.Reset();
-                client.BeginReceive(data, 0, 1024, 0, new AsyncCallback(ReceiveCallback), client);
-                receiveDone.WaitOne(1000);
+                _receiveDone.Reset();
+                client.BeginReceive(_data, 0, 1024, 0, ReceiveCallback, client);
+                _receiveDone.WaitOne(1000);
             }
         }
 
@@ -100,15 +98,15 @@ namespace ChatApp
                 int byteReceived = client?.EndReceive(ar) ?? 0;
                 if (byteReceived > 0)
                 {
-                    string message = Encoding.UTF8.GetString(data, 0, byteReceived);
-                    if (message != null)
-                        cw.Receive(message);
+                    string message = Encoding.UTF8.GetString(_data, 0, byteReceived);
+                    if (message.Length > 0)
+                        _cw.Receive(message);
                     if (message == "Disconnected")
                     {
-                        cw.DisableConnect();
-                        cw.DisableSend();
+                        _cw.DisableConnect();
+                        _cw.DisableSend();
                     }
-                    receiveDone.Set();
+                    _receiveDone.Set();
                 }
             }
             catch (Exception e)
@@ -121,7 +119,7 @@ namespace ChatApp
         {
             try
             {
-                server.Close();
+                _server.Close();
             }
             catch (Exception e)
             {

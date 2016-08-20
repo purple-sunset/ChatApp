@@ -53,6 +53,7 @@
             // 
             // btnSend
             // 
+            this.btnSend.Enabled = false;
             this.btnSend.Location = new System.Drawing.Point(602, 391);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(96, 34);
@@ -61,7 +62,7 @@
             this.btnSend.UseVisualStyleBackColor = true;
             this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
-            // ChatWindow
+            // AsyncChatWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -69,7 +70,7 @@
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.textConv);
             this.Controls.Add(this.textSend);
-            this.Name = "ChatWindow";
+            this.Name = "AsyncChatWindow";
             this.Text = "ChatWindow";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ChatWindow_FormClosing);
             this.ResumeLayout(false);
