@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncSockerSender.cs" />
+    <Compile Include="AsyncSocketSender.cs" />
     <Compile Include="AsyncSocketReceiver.cs" />
     <Compile Include="ChatWindow.cs">
       <SubType>Form</SubType>

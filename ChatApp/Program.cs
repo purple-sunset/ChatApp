@@ -13,8 +13,8 @@ namespace ChatApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);           
-            DIContainer.SetModule<ISender, AsyncSockerSender>();
-            DIContainer.SetModule<IReceiver, AsyncSocketReceiver>();
+            DIContainer.SetModule<ISender, SocketSender>();
+            DIContainer.SetModule<IReceiver, SocketReceiver>();
             DIContainer.SetModule<ChatWindow, ChatWindow>();            
             var chatWindow = DIContainer.GetModule<ChatWindow>();
             Application.Run(chatWindow);

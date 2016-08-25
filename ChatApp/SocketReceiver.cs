@@ -15,20 +15,19 @@ namespace ChatApp
         public IPEndPoint ReceiveEndPoint { get; set; }
 
         public Thread ReceivingThread { get; set; }
-        private Socket _socket;
-        private Socket _handler;
+        private Socket _server;
+        private readonly byte[] _data = new byte[1024];
         private ChatWindow _cw;
         public void Init(object o)
         {
             ReceiveEndPoint = new IPEndPoint(Address, Port);
-            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _cw = (ChatWindow) o;
+            _server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _cw = (ChatWindow)o;
             try
             {
-                _socket.Bind(ReceiveEndPoint);
-                _socket.Listen(10);
-                ReceivingThread = new Thread(Receive) {IsBackground = true};
-                ReceivingThread.Start();
+                _server.Bind(ReceiveEndPoint);
+                _server.Listen(100);
+                Accept();
             }
             catch (Exception e)
             {
@@ -38,34 +37,56 @@ namespace ChatApp
 
         public void Accept()
         {
-            
+            while (true)
+            {
+                if (!_server.Connected)
+                {
+                    try
+                    {
+                        _server.Accept();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                }
+                if ((_cw.IsConnected) && (_server.Connected))
+                {
+                    ReceivingThread = new Thread(Receive) { IsBackground = true };
+                    ReceivingThread.Start();
+                }
+                if ((!_cw.IsConnected) && (_server.Connected))
+                {
+                    _server.Disconnect(true);
+                    ReceivingThread.Abort();
+                }
+            }
         }
 
         public void Receive(object o)
         {
-            while (_socket != null)
+            while (_server.Connected)
             {
-                if (_handler == null)
+                try
                 {
-                    _handler = _socket.Accept();
-                }
-                string message = null;
-                while ((bool) _handler?.Connected)
-                {
-                    var data = new byte[1024];
-                    var byteReceived = _handler.Receive(data);
-                    message += Encoding.UTF8.GetString(data, 0, byteReceived);
-                    if (message.IndexOf("\n", StringComparison.Ordinal) > -1)
+                    int byteReceived = _server.Receive(_data);
+                    if (byteReceived > 0)
                     {
-                        message = message.Replace("\n", String.Empty);
-                        break;
+                        string message = Encoding.UTF8.GetString(_data, 0, byteReceived);
+                        if (message.Length > 0)
+                            _cw.Receive(message);
+                        if (message == "Disconnected")
+                        {
+                            _cw.DisableConnect();
+                            _cw.DisableSend();
+                        }
                     }
                 }
-                if (message != null)
-                    _cw.Receive(message);
-                
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                } 
             }
-
         }
 
 
@@ -73,8 +94,7 @@ namespace ChatApp
         {
             try
             {
-                _handler.Close();
-                _socket.Close();
+                _server.Close();
                 ReceivingThread.Abort();
             }
             catch (Exception e)

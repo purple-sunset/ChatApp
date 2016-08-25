@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace ChatApp
 {
-    class AsyncSockerSender : ISender
+    class AsyncSocketSender : ISender
     {
         public IPAddress Address { get; set; }
 

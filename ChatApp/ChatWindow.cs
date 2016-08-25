@@ -84,7 +84,7 @@ namespace ChatApp
             if (textConv.InvokeRequired)
             {
                 SetTextCallback d = Receive;
-                Invoke(d, new object[] { s });
+                Invoke(d, s);
             }
             else
             {

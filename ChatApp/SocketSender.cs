@@ -11,67 +11,77 @@ namespace ChatApp
         public int Port { get; set; }
         public IPEndPoint SendEndPoint { get; set; }
 
-        private Socket _socket;
+        private Socket _client;
+        private ChatWindow _cw;
+        private bool _isSended;
 
         public void Init(object o)
         {
-            try
-            {
-                SendEndPoint = new IPEndPoint(Address, Port);
-                _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
+            _cw = (ChatWindow)o;
+            SendEndPoint = new IPEndPoint(Address, Port);
+            _client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Connect();
         }
 
         public void Connect()
         {
-            
+            while (true)
+            {
+                if (!_client.Connected)
+                {
+                    try
+                    {
+                        _client.Connect(SendEndPoint);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                }
+                if (_client.Connected)
+                {
+                    _cw.EnableConnect();
+                    _cw.EnableSend();
+                }
+                else
+                {
+                    _cw.DisableConnect();
+                    _cw.DisableSend();
+                }
+                if ((!_cw.IsConnected) && (_client.Connected))
+                {
+                    _client.Disconnect(true);
+                }
+                
+            }
         }
 
         public bool Send(string s)
         {
-            try
+            _isSended = false;
+            if (_client.Connected)
             {
-                if (!_socket.Connected)
+                byte[] data = Encoding.UTF8.GetBytes(s);
+                try
                 {
-                    _socket.Connect(SendEndPoint);
-                }
-                if(_socket.Connected)
-                {
-                    byte[] data = Encoding.UTF8.GetBytes(s + "\n");
-                    int byteSended = _socket.Send(data);
+                    var byteSended = _client.Send(data);
                     if (byteSended > 0)
-                        return true;
+                        _isSended = true;
                 }
-                return false;
-
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
             }
-            catch (ArgumentNullException ane)
-            {
-                Console.WriteLine(ane.ToString());
-            }
-            catch (SocketException se)
-            {
-
-                Console.WriteLine(se.ToString());
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-            return false;
+            return _isSended;
         }
 
         public void Close()
         {
             try
             {
-                _socket.Close();
-
+                Send("Disconnected");
+                _client.Close();
             }
             catch (Exception e)
             {
