@@ -44,10 +44,7 @@ namespace ChatApp
 
         public void Close()
         {
-            if (_client != null)
-            {
-                _client.Close(); 
-            }
+            _client?.Close();
         }
 
     }
